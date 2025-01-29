@@ -12,14 +12,15 @@
     <script>
         var map = L.map('map').setView([50.819, 4.38], 14);
         
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://carto.com/">CARTO</a> contributors',
+        subdomains: 'abcd',
+        maxZoom: 20
+    }).addTo(map);
+        
         // Markers for sites
         var site1 = L.marker([50.8265095, 4.3749665]).addTo(map)
-            .bindPopup("<b>Site 1: École Sainte Trinité</b><br><img src='SITE1-Trinite.png' width='250px'>");
+            .bindPopup("<b>Site 1: Ã‰cole Sainte TrinitÃ©</b><br><img src='SITE1-Trinite.png' width='250px'>");
         
         var site2 = L.marker([50.812659, 4.390111]).addTo(map)
             .bindPopup("<b>Site 2: Projet Vandeuren</b><br><img src='SITE2-Vandeuren.png' width='250px'>");
