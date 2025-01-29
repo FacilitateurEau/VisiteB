@@ -19,18 +19,19 @@
             maxZoom: 20
         }).addTo(map);
 
-        // Ajout des marqueurs pour les sites visités avec popups visibles au survol
-        var site1 = L.marker([50.8265095, 4.3749665]).addTo(map)
-            .bindPopup("<b>Site 1: École Sainte Trinité</b><br><img src='SITE1-Trinite.png' width='250px'>")
-            .on('mouseover', function(e) { this.openPopup(); })
-            .on('mouseout', function(e) { this.closePopup(); });
-        
-        var site2 = L.marker([50.812659, 4.390111]).addTo(map)
-            .bindPopup("<b>Site 2: Projet Vandeuren</b><br><img src='SITE2-Vandeuren.png' width='250px'>")
-            .on('mouseover', function(e) { this.openPopup(); })
-            .on('mouseout', function(e) { this.closePopup(); });
+        // Ajout des marqueurs pour les sites visités avec popups au survol
+        function addMarker(lat, lng, title, img) {
+            var marker = L.marker([lat, lng]).addTo(map)
+                .bindPopup("<b>" + title + "</b><br><img src='" + img + "' width='250px'>");
 
-        // Fonction pour charger un fichier KML, supprimer les marqueurs et ajouter un popup
+            marker.on('mouseover', function() { marker.openPopup(); });
+            marker.on('mouseout', function() { marker.closePopup(); });
+        }
+
+        addMarker(50.8265095, 4.3749665, "Site 1: École Sainte Trinité", "SITE1-Trinite.png");
+        addMarker(50.812659, 4.390111, "Site 2: Projet Vandeuren", "SITE2-Vandeuren.png");
+
+        // Fonction pour charger un fichier KML, supprimer les marqueurs et ajouter un popup au survol
         function loadKML(map, url, color, dashed = false, popupText = "") {
             omnivore.kml(url)
                 .on('ready', function(e) {
@@ -47,8 +48,8 @@
                             });
                             if (popupText) {
                                 layer.bindPopup(popupText);
-                                layer.on('mouseover', function(e) { this.openPopup(); });
-                                layer.on('mouseout', function(e) { this.closePopup(); });
+                                layer.on('mouseover', function() { layer.openPopup(); });
+                                layer.on('mouseout', function() { layer.closePopup(); });
                             }
                         }
                     });
