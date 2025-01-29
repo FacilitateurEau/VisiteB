@@ -19,10 +19,10 @@
             maxZoom: 20
         }).addTo(map);
 
-        // Ajout des marqueurs pour les sites visités (même logique que la carte A)
+        // Fonction pour ajouter un marqueur avec popup au survol
         function addMarker(lat, lng, title, img) {
             var marker = L.marker([lat, lng]).addTo(map)
-                .bindPopup("<b>" + title + "</b><br><img src='" + img + "' width='250px'>", { autoClose: false });
+                .bindPopup("<b>" + title + "</b><br><img src='" + img + "' width='250px'>");
 
             marker.on('mouseover', function() { marker.openPopup(); });
             marker.on('mouseout', function() { marker.closePopup(); });
@@ -31,7 +31,7 @@
         addMarker(50.8265095, 4.3749665, "Site 1: École Sainte Trinité", "SITE1-Trinite.png");
         addMarker(50.812659, 4.390111, "Site 2: Projet Vandeuren", "SITE2-Vandeuren.png");
 
-        // Fonction pour charger un fichier KML sans marqueurs parasites et ajouter un popup au clic (comme carte A)
+        // Fonction pour charger un fichier KML sans marqueurs parasites et afficher popup au survol
         function loadKML(map, url, color, dashed = false, popupText = "") {
             omnivore.kml(url)
                 .on('ready', function(e) {
@@ -46,8 +46,9 @@
                                 opacity: 0.8,
                                 dashArray: dashed ? "5, 10" : ""
                             });
+
                             if (popupText) {
-                                layer.bindPopup(popupText, { autoClose: false, closeOnClick: false });
+                                layer.bindTooltip(popupText, { permanent: false, direction: "auto" });
                             }
                         }
                     });
@@ -58,7 +59,7 @@
                 .addTo(map);
         }
 
-        // Chargement des itinéraires avec le même style que la carte A
+        // Chargement des itinéraires avec popups au survol
         loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_pied.kml', 'rgb(141, 182, 60)', true, "Trajet à pied");
         loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_pied_2.kml', 'rgb(141, 182, 60)', true, "Trajet à pied");
         loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_BUS.kml', 'rgb(0, 111, 144)', false, "Trajet en bus");
