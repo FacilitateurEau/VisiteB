@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carte Visite B</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-plugins/3.4.0/layer/vector/KML.js"></script>
+    <script src="https://unpkg.com/leaflet-kml"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
 </head>
 <body>
@@ -26,24 +26,23 @@
         var site2 = L.marker([50.812659, 4.390111]).addTo(map)
             .bindPopup("<b>Site 2: Projet Vandeuren</b><br><img src='SITE2-Vandeuren.png' width='250px'>");
         
-        // Fonction pour charger un fichier KML
-        function loadKML(map, url, color, dashArray = null) {
+        // Fonction pour charger un fichier KML avec Leaflet-KML
+        function loadKML(map, url) {
             fetch(url)
-                .then(response => response.text())
+                .then(res => res.text())
                 .then(kmlText => {
                     var parser = new DOMParser();
                     var kml = parser.parseFromString(kmlText, 'text/xml');
-                    var track = new L.KML(kml); // Utilisation du plugin KML
-                    track.setStyle({ color: color, weight: 4, opacity: 0.8, dashArray: dashArray });
-                    map.addLayer(track);
+                    var kmlLayer = new L.KML(kml);
+                    map.addLayer(kmlLayer);
                 })
                 .catch(error => console.error('Erreur de chargement KML:', error));
         }
 
-        // Charger les itinéraires KML
-        loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_pied.kml', 'rgb(141, 182, 60)', '10,10');
-        loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_pied_2.kml', 'rgb(141, 182, 60)', '10,10');
-        loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_BUS.kml', 'rgb(0, 111, 144)');
+        // Charger les itinéraires avec les URLs brutes de GitHub
+        loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_pied.kml');
+        loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_pied_2.kml');
+        loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_BUS.kml');
     </script>
 </body>
 </html>
