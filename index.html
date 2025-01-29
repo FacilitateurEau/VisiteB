@@ -19,20 +19,21 @@
             maxZoom: 20
         }).addTo(map);
 
-        // Markers des sites visités (seulement 2)
+        // Ajout des marqueurs pour les sites de visite (Seulement 2)
         var site1 = L.marker([50.8265095, 4.3749665]).addTo(map)
             .bindPopup("<b>Site 1: École Sainte Trinité</b><br><img src='SITE1-Trinite.png' width='250px'>");
         
         var site2 = L.marker([50.812659, 4.390111]).addTo(map)
             .bindPopup("<b>Site 2: Projet Vandeuren</b><br><img src='SITE2-Vandeuren.png' width='250px'>");
 
-        // Fonction pour charger un fichier KML et filtrer les marqueurs parasites
+        // Fonction pour charger un fichier KML sans les marqueurs parasites
         function loadKML(map, url, color, dashed = false) {
             omnivore.kml(url)
-                .on('ready', function() {
-                    this.eachLayer(function(layer) {
+                .on('ready', function(e) {
+                    var layers = e.target.getLayers();
+                    layers.forEach(layer => {
                         if (layer instanceof L.Marker) {
-                            map.removeLayer(layer); // Supprime les marqueurs des KML
+                            map.removeLayer(layer); // Supprime directement les marqueurs parasites
                         } else {
                             layer.setStyle({
                                 color: color,
@@ -49,12 +50,10 @@
                 .addTo(map);
         }
 
-        // Charger les itinéraires sans marqueurs inutiles
+        // Chargement des itinéraires sans marqueurs parasites
         loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_pied.kml', 'rgb(141, 182, 60)', true);
         loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_pied_2.kml', 'rgb(141, 182, 60)', true);
         loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_BUS.kml', 'rgb(0, 111, 144)', false);
     </script>
 </body>
 </html>
-
-
