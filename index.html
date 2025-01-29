@@ -19,7 +19,7 @@
             maxZoom: 20
         }).addTo(map);
 
-        // Fonction pour ajouter un marqueur avec popup au survol
+        // Fonction pour ajouter un marqueur avec popup au survol (comme carte A)
         function addMarker(lat, lng, title, img) {
             var marker = L.marker([lat, lng]).addTo(map)
                 .bindPopup("<b>" + title + "</b><br><img src='" + img + "' width='250px'>");
@@ -31,14 +31,14 @@
         addMarker(50.8265095, 4.3749665, "Site 1: École Sainte Trinité", "SITE1-Trinite.png");
         addMarker(50.812659, 4.390111, "Site 2: Projet Vandeuren", "SITE2-Vandeuren.png");
 
-        // Fonction pour charger un fichier KML sans marqueurs parasites et afficher popup au survol
-        function loadKML(map, url, color, dashed = false, popupText = "") {
+        // Fonction pour charger un fichier KML avec tooltip au survol au lieu de popups persistants
+        function loadKML(map, url, color, dashed = false, tooltipText = "") {
             omnivore.kml(url)
                 .on('ready', function(e) {
                     var layers = e.target.getLayers();
                     layers.forEach(layer => {
                         if (layer instanceof L.Marker) {
-                            map.removeLayer(layer); // Supprime les marqueurs des KML
+                            map.removeLayer(layer); // Supprime les marqueurs parasites des KML
                         } else {
                             layer.setStyle({
                                 color: color,
@@ -47,8 +47,8 @@
                                 dashArray: dashed ? "5, 10" : ""
                             });
 
-                            if (popupText) {
-                                layer.bindTooltip(popupText, { permanent: false, direction: "auto" });
+                            if (tooltipText) {
+                                layer.bindTooltip(tooltipText, { permanent: false, direction: "top", opacity: 0.9 });
                             }
                         }
                     });
@@ -59,7 +59,7 @@
                 .addTo(map);
         }
 
-        // Chargement des itinéraires avec popups au survol
+        // Chargement des itinéraires avec tooltips au survol (comme carte A)
         loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_pied.kml', 'rgb(141, 182, 60)', true, "Trajet à pied");
         loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_pied_2.kml', 'rgb(141, 182, 60)', true, "Trajet à pied");
         loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_BUS.kml', 'rgb(0, 111, 144)', false, "Trajet en bus");
