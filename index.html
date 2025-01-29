@@ -19,21 +19,25 @@
             maxZoom: 20
         }).addTo(map);
 
-        // Ajout des marqueurs pour les sites de visite (Seulement 2)
+        // Ajout des marqueurs pour les sites visités avec popups visibles au survol
         var site1 = L.marker([50.8265095, 4.3749665]).addTo(map)
-            .bindPopup("<b>Site 1: École Sainte Trinité</b><br><img src='SITE1-Trinite.png' width='250px'>");
+            .bindPopup("<b>Site 1: École Sainte Trinité</b><br><img src='SITE1-Trinite.png' width='250px'>")
+            .on('mouseover', function(e) { this.openPopup(); })
+            .on('mouseout', function(e) { this.closePopup(); });
         
         var site2 = L.marker([50.812659, 4.390111]).addTo(map)
-            .bindPopup("<b>Site 2: Projet Vandeuren</b><br><img src='SITE2-Vandeuren.png' width='250px'>");
+            .bindPopup("<b>Site 2: Projet Vandeuren</b><br><img src='SITE2-Vandeuren.png' width='250px'>")
+            .on('mouseover', function(e) { this.openPopup(); })
+            .on('mouseout', function(e) { this.closePopup(); });
 
-        // Fonction pour charger un fichier KML sans les marqueurs parasites
-        function loadKML(map, url, color, dashed = false) {
+        // Fonction pour charger un fichier KML, supprimer les marqueurs et ajouter un popup
+        function loadKML(map, url, color, dashed = false, popupText = "") {
             omnivore.kml(url)
                 .on('ready', function(e) {
                     var layers = e.target.getLayers();
                     layers.forEach(layer => {
                         if (layer instanceof L.Marker) {
-                            map.removeLayer(layer); // Supprime directement les marqueurs parasites
+                            map.removeLayer(layer); // Supprime les marqueurs des KML
                         } else {
                             layer.setStyle({
                                 color: color,
@@ -41,6 +45,11 @@
                                 opacity: 0.8,
                                 dashArray: dashed ? "5, 10" : ""
                             });
+                            if (popupText) {
+                                layer.bindPopup(popupText);
+                                layer.on('mouseover', function(e) { this.openPopup(); });
+                                layer.on('mouseout', function(e) { this.closePopup(); });
+                            }
                         }
                     });
                 })
@@ -50,10 +59,10 @@
                 .addTo(map);
         }
 
-        // Chargement des itinéraires sans marqueurs parasites
-        loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_pied.kml', 'rgb(141, 182, 60)', true);
-        loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_pied_2.kml', 'rgb(141, 182, 60)', true);
-        loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_BUS.kml', 'rgb(0, 111, 144)', false);
+        // Chargement des itinéraires avec popups
+        loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_pied.kml', 'rgb(141, 182, 60)', true, "🟢 Trajet à pied");
+        loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_pied_2.kml', 'rgb(141, 182, 60)', true, "🟢 Trajet à pied");
+        loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_BUS.kml', 'rgb(0, 111, 144)', false, "🔵 Trajet en bus");
     </script>
 </body>
 </html>
