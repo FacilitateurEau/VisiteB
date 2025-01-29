@@ -25,35 +25,29 @@
         
         var site2 = L.marker([50.812659, 4.390111]).addTo(map)
             .bindPopup("<b>Site 2: Projet Vandeuren</b><br><img src='SITE2-Vandeuren.png' width='250px'>");
-        
-        // Fonction pour charger un fichier KML avec Omnivore
-        function loadKML(map, url, color) {
-            if (url) {
-                omnivore.kml(url).addTo(map)
-                    .on('ready', function() {
-                        this.setStyle({ color: color, weight: 4, opacity: 0.8 });
-                    })
-                    .on('error', function() {
-                        console.error('Erreur de chargement du fichier KML:', url);
+
+        // Fonction pour charger un fichier KML avec Omnivore et appliquer un style
+        function loadKML(map, url, color, dashArray = null) {
+            omnivore.kml(url)
+                .on('ready', function() {
+                    this.setStyle({
+                        color: color,
+                        weight: 4,
+                        opacity: 0.8,
+                        dashArray: dashArray
                     });
-            } else {
-                console.error('URL du fichier KML non valide.');
-            }
+                })
+                .on('error', function() {
+                    console.error('Erreur de chargement du fichier KML:', url);
+                })
+                .addTo(map);
         }
 
-        // URLs des fichiers KML sur GitHub
-        var kmlUrls = [
-            'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_pied.kml',
-            'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_pied_2.kml',
-            'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_BUS.kml'
-        ];
-
-        var colors = ['rgb(141, 182, 60)', 'rgb(141, 182, 60)', 'rgb(0, 111, 144)'];
-
-        // Charger tous les itinéraires
-        for (var i = 0; i < kmlUrls.length; i++) {
-            loadKML(map, kmlUrls[i], colors[i]);
-        }
+        // Charger les itinéraires avec les bonnes couleurs et styles
+        loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_pied.kml', 'rgb(141, 182, 60)', '10, 10');
+        loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_pied_2.kml', 'rgb(141, 182, 60)', '10, 10');
+        loadKML(map, 'https://raw.githubusercontent.com/facilitateureau/VisiteB/main/VISITE_B_itinéraire_BUS.kml', 'rgb(0, 111, 144)');
     </script>
 </body>
 </html>
+
